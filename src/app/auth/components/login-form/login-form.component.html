@@ -1,0 +1,27 @@
+<form autocomplete="off" [formGroup]="myForm" (ngSubmit)="login()">
+  <h2>Iniciar Sesión</h2>
+
+  <div class="input-group">
+    <label for="correo">Correo</label>
+    <input id="nomcorreobre" type="text" placeholder="Correo" formControlName="correo">
+    <span class="error-message"></span>
+  </div>
+
+  <div class="input-group">
+    <label for="contrasenia">contraseña</label>
+    <input id="contrasenia" type="text" placeholder="contraseña" formControlName="contrasenia">
+    <span class="error-message"></span>
+  </div>
+
+  <div class="submit-group">
+    <button [disabled]="myForm.invalid" type="submit">
+      Iniciar Sesión
+    </button>
+  </div>
+
+  <div class="login-link">
+    <a routerLink="/auth/user-register">Regresar Usuario</a>
+    <div></div>
+    <a routerLink="/auth/register">Registrar Socio</a>
+  </div>
+</form>

@@ -24,5 +24,12 @@ export class UsuarioService {
 
   }
 
+  login(email: string, password: string) {
+
+    return this.http.get<UsuarioRegister>(`${this.baseUrl}/${email}/${password}`).pipe(
+      catchError(err => throwError(() => err.error.message))
+    );
+
+  }
 
 }

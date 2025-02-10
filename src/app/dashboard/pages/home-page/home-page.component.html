@@ -2,14 +2,14 @@
   <!-- Barra lateral -->
   <div class="sidebar">
     <div class="logo">
-      <h2>Dashboard</h2>
+      <h2 style="color: white;">Dashboard</h2>
     </div>
     <ul>
       <li><a href="javascript:void(0)" (click)="mostrarSocios()">Socios</a></li>
       <li><a href="javascript:void(0)" (click)="mostrarTransferencias()">Transferencias</a></li>
     </ul>
     <!-- Enlace de Inicio -->
-    <a href="/" class="home-btn">Inicio</a>
+    <a href="/" class="home-btn">Cerrar sesión</a>
   </div>
 
   <!-- Contenido principal -->
@@ -48,11 +48,41 @@
       </div>
     </div>
 
+    <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="transferencia()">
+      <h2>Transferencia</h2>
+
+      <div class="input-group">
+        <label for="cuentaDest">Cuenta de destino</label>
+        <input id="cuentaDest" type="text" placeholder="Cuenta de Destino" formControlName="cuentaDest">
+        <span class="error-message"></span>
+      </div>
+
+      <div class="input-group">
+        <label for="tipo">Tipo</label>
+        <input id="tipo" type="text" placeholder="Tipo" formControlName="tipo">
+        <span class="error-message"></span>
+      </div>
+
+      <div class="input-group">
+        <label for="monto">Monto</label>
+        <input id="monto" type="number" placeholder="Monto" formControlName="monto">
+        <span class="error-message"></span>
+      </div>
+
+      <div class="submit-group">
+        <button [disabled]="myForm.invalid" type="submit">
+          Realizar Transferencia
+        </button>
+      </div>
+    </form>
+
+
     <!-- Sección de Transferencias -->
     <div *ngIf="mostrarTransferenciasContenido">
       <div class="transferencias-container">
+        <h2>Listado de tranferencias</h2>
         <div class="transferencias-grid">
-          <div *ngFor="let transferencia of transferencias" class="transferencia-card">
+          <div *ngFor="let transferencia of transferencias?.data" class="transferencia-card">
             <div class="avatar transfer-avatar">
               <span>{{ transferencia.tipo.charAt(0) }}</span>
             </div>

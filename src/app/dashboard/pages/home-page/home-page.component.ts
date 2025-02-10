@@ -1,7 +1,12 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { UsuarioService } from '../../../services/usuario.service';
 import { TransferenciaService } from '../../../services/transferencia.service';
 import { Transferencia } from '../../../models/transferencia.interface';
+import { ActivatedRoute, Router } from '@angular/router';
+import { UsuarioRegister } from '../../../auth/interfaces/usuario-register-response';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import Swal from 'sweetalert2';
+import { TransferenciaResponse } from '../../../models/transferencia-response.interface';
 
 @Component({
   selector: 'app-home-page',
@@ -11,9 +16,19 @@ import { Transferencia } from '../../../models/transferencia.interface';
 export class HomePageComponent implements OnInit {
   titulo: string = 'Lista de Socios';
   socios: any[] = []; // Lista de socios
-  transferencias: Transferencia[] = []; // Lista de transferencias
+  transferencias?: TransferenciaResponse; // Lista de transferencias
   mostrarSociosContenido: boolean = true; // Mostrar Socios por defecto
   mostrarTransferenciasContenido: boolean = false; // Ocultar Transferencias inicialmente
+  private route = inject(ActivatedRoute);
+  public usuario?: UsuarioRegister;
+  private fb = inject(FormBuilder);  private router = inject(Router);
+
+  public myForm: FormGroup = this.fb.group({
+    cuentaDest: ['', [Validators.required, Validators.minLength(1)]],
+    tipo: ['', [Validators.required, Validators.minLength(1)]],
+    monto: ['', [Validators.required, Validators.min(1)]],
+  });
+
 
   constructor(
     private usuarioService: UsuarioService,
@@ -21,6 +36,11 @@ export class HomePageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const id = this.route.snapshot.paramMap.get('id');
+    this.usuarioService.getUsuarioById(id!).subscribe(resp => {
+      this.usuario = resp;
+      console.log(this.usuario);
+    });
     this.cargarSocios(); // Cargar los socios por defecto
   }
 
@@ -56,7 +76,7 @@ export class HomePageComponent implements OnInit {
   cargarTransferencias(): void {
     this.transferenciaService.obtenerTransferencias().subscribe({
       next: (response) => {
-        this.transferencias = response.data; // Guardamos las transferencias obtenidas
+        this.transferencias = response; // Guardamos las transferencias obtenidas
       },
       error: (err) => {
         console.error('Error al obtener transferencias:', err);
@@ -72,4 +92,18 @@ export class HomePageComponent implements OnInit {
       this.cargarTransferencias(); // Actualizar la lista de transferencias
     }
   }
+
+
+  transferencia() {
+    const {cuentaDest, ...dataTransferencia} = this.myForm.value;
+    const cuentaOrigen = this.usuario?.data[0].socio.cuentas[0].id;
+    this.transferenciaService.realizarTransferencia(cuentaOrigen!, cuentaDest, dataTransferencia).subscribe(resp => {
+      if(resp.data.length !== 0) {
+        Swal.fire('Success', 'Transferencia realizada exitosamente', 'success');
+      } else {
+        Swal.fire('Error', 'Error al realizar la transferencia', 'error');
+      }
+    });
+  }
+
 }

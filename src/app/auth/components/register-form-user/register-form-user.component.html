@@ -1,5 +1,5 @@
 <form autocomplete="off" [formGroup]="myForm" (ngSubmit)="register()">
-  <h2>Register</h2>
+  <h2>Registrar usuario</h2>
 
   <div class="input-group">
     <label for="correo">Correo</label>
@@ -20,7 +20,7 @@
   </div>
 
   <div class="input-group">
-    <label for="tipo">Tipo</label>
+    <label for="tipo">Socio</label>
     <select id="tipo" formControlName="idSocio">
       <option *ngFor="let socio of socios[0].data" [value]="socio.id">{{ socio.nombre }}</option>
     </select>
@@ -36,11 +36,13 @@
 
   <div class="submit-group">
     <button [disabled]="myForm.invalid" type="submit">
-      Register
+      Registrar
     </button>
   </div>
 
   <div class="login-link">
     <a routerLink="/auth/register">Registrar Socio</a>
+    <div></div>
+    <a routerLink="/auth/login">Iniciar Sesión</a>
   </div>
 </form>

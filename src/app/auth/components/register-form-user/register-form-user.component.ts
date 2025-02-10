@@ -28,7 +28,7 @@ export class RegisterFormUserComponent implements OnInit {
     public myForm: FormGroup = this.fb.group({
       correo: ['', [Validators.required, Validators.minLength(6)]],
       contrasenia: ['', [Validators.required, Validators.minLength(6)]],
-      tipo: ['', [Validators.required, Validators.minLength(6)]],
+      tipo: ['', [Validators.required, Validators.minLength(1)]],
       idSocio: ['', [Validators.required, Validators.minLength(1)]],
       saldo: [0, [Validators.required, Validators.min(1)]],
     });
